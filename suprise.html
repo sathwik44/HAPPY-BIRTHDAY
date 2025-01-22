@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Birthday Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #f8b1d1, #e0bbfc); /* Pink to Soft Lavender Gradient */
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        /* Greeting Card */
+        .greeting-card {
+            width: 500px;
+            height: 400px;
+            background-color: #ffccff; /* Peachy Pink */
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            color: #ff4081; /* Dark Pink */
+            text-transform: uppercase;
+        }
+
+        .greeting-card h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        .blinking-button {
+            padding: 12px 25px;
+            background-color: #ff4081; /* Dark Pink */
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            cursor: pointer;
+            animation: blink 1s infinite;
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: transform 0.3s ease;
+        }
+
+        .blinking-button:hover {
+            background-color: #f50057; /* Slightly darker pink */
+            transform: scale(1.1);
+        }
+
+        .blinking-button:active {
+            transform: scale(1);
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Candles Page */
+        .candles-page {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        /* Repositioned "Blow the Candles" text with shadow */
+        .candles-page h2 {
+            font-size: 30px;
+            color: #ff4081; /* Dark Pink */
+            margin-top: 0;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5); /* Adding shadow */
+        }
+
+        /* Candles container (moved down) */
+        .candles-container {
+            position: absolute;
+            top: 70%; /* Move candles down */
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .candle {
+            width: 25px;
+            height: 80px;
+            background-color: #ffeb3b; /* Soft Yellow Candles */
+            margin: 10px;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            opacity: 1;
+            transition: opacity 2s ease, transform 2s ease; /* Slow transition */
+            position: relative;
+        }
+
+        .flame {
+            width: 12px;
+            height: 20px;
+            background-color: #ff9800; /* Flame Orange */
+            position: absolute;
+            top: -18px;
+            left: 6px;
+            border-radius: 50%;
+            opacity: 1;
+            transition: opacity 2s ease, transform 2s ease; /* Slow transition */
+        }
+
+        @keyframes flicker {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0.6; transform: translateY(-3px); }
+        }
+
+        .candle:nth-child(1) .flame { animation: flicker 1s infinite alternate; }
+        .candle:nth-child(2) .flame { animation: flicker 1s infinite alternate 1.2s; }
+        .candle:nth-child(3) .flame { animation: flicker 1s infinite alternate 1.4s; }
+        .candle:nth-child(4) .flame { animation: flicker 1s infinite alternate 1.6s; }
+        .candle:nth-child(5) .flame { animation: flicker 1s infinite alternate 1.8s; }
+        .candle:nth-child(6) .flame { animation: flicker 1s infinite alternate 2s; }
+        .candle:nth-child(7) .flame { animation: flicker 1s infinite alternate 2.2s; }
+        .candle:nth-child(8) .flame { animation: flicker 1s infinite alternate 2.4s; }
+        .candle:nth-child(9) .flame { animation: flicker 1s infinite alternate 2.6s; }
+        .candle:nth-child(10) .flame { animation: flicker 2s infinite alternate 2.8s; }
+
+        /* Quotes Page */
+        .quote-page {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .quote-page h1 {
+            font-size: 40px;
+            color: #ff4081; /* Dark Pink */
+            margin-bottom: 20px;
+        }
+
+        .quote {
+            font-size: 24px;
+            color: #fff;
+            margin: 20px;
+            font-style: italic;
+        }
+
+        .quote-btn {
+            padding: 12px 25px;
+            background-color: #ff4081; /* Dark Pink */
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .quote-btn:hover {
+            background-color: #f50057; /* Slightly darker pink */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Greeting Card -->
+        <div id="greetingCard" class="greeting-card">
+            <h1>Happy Birthday!</h1>
+            <button class="blinking-button">Click Me!</button>
+        </div>
+
+        <!-- Candles Page -->
+        <div id="candlesPage" class="candles-page">
+            <h2>BLOW THE CANDLES!</h2>
+
+            <!-- Candles container to hold candles in a straight line -->
+            <div class="candles-container">
+                <!-- Candles -->
+                <div class="candle" id="candle1">
+                    <div class="flame" id="flame1"></div>
+                </div>
+                <div class="candle" id="candle2">
+                    <div class="flame" id="flame2"></div>
+                </div>
+                <div class="candle" id="candle3">
+                    <div class="flame" id="flame3"></div>
+                </div>
+                <div class="candle" id="candle4">
+                    <div class="flame" id="flame4"></div>
+                </div>
+                <div class="candle" id="candle5">
+                    <div class="flame" id="flame5"></div>
+                </div>
+                <div class="candle" id="candle6">
+                    <div class="flame" id="flame6"></div>
+                </div>
+                <div class="candle" id="candle7">
+                    <div class="flame" id="flame7"></div>
+                </div>
+                <div class="candle" id="candle8">
+                    <div class="flame" id="flame8"></div>
+                </div>
+                <div class="candle" id="candle9">
+                    <div class="flame" id="flame9"></div>
+                </div>
+                <div class="candle" id="candle10">
+                    <div class="flame" id="flame10"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quotes Page -->
+        <div id="quotePage" class="quote-page">
+            <h1>Happy Birthday!</h1>
+            <p class="quote">"May your day be filled with laughter, joy, and lots of cake!"</p>
+            <button class="quote-btn" onclick="location.reload()">Go Back</button>
+        </div>
+    </div>
+
+    <script>
+        // Variables for page elements
+        const greetingCard = document.getElementById("greetingCard");
+        const blinkingButton = document.querySelector(".blinking-button");
+        const candlesPage = document.getElementById("candlesPage");
+        const quotePage = document.getElementById("quotePage");
+
+        // Candles and flames
+        const candles = document.querySelectorAll(".candle");
+        const flames = document.querySelectorAll(".flame");
+
+        let candlesBlownOut = 0;
+
+        // Event listener to transition to the candles page
+        blinkingButton.addEventListener("click", () => {
+            greetingCard.style.display = "none";
+            candlesPage.style.display = "block";
+            startAudioDetection();
+        });
+
+        // Sound detection to blow out candles
+        function startAudioDetection() {
+            let blowCount = 0;  // Count of valid air blows
+
+            // Set up audio detection
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const analyser = audioContext.createAnalyser();
+                    const microphone = audioContext.createMediaStreamSource(stream);
+                    microphone.connect(analyser);
+
+                    const bufferLength = analyser.frequencyBinCount;
+                    const dataArray = new Uint8Array(bufferLength);
+
+                    function detectSound() {
+                        analyser.getByteFrequencyData(dataArray);
+                        let totalSound = 0;
+
+                        for (let i = 0; i < bufferLength; i++) {
+                            totalSound += dataArray[i];
+                        }
+
+                        // Blowing sound detected (totalSound is high enough)
+                        if (totalSound > 500 && blowCount < 3) {
+                            if (candlesBlownOut < candles.length) {
+                                // Blow out a candle slowly
+                                setTimeout(() => {
+                                    candles[candlesBlownOut].style.opacity = 0;
+                                    flames[candlesBlownOut].style.opacity = 0;
+                                    candles[candlesBlownOut].style.transform = "scale(0)";
+                                    blowCount++;  // Increment blow count
+                                    candlesBlownOut++;  // Move to next candle
+                                }, 2000); // Slow disappearance
+                            }
+                        }
+
+                        // Transition to quote page once all candles are blown out
+                        if (candlesBlownOut === candles.length) {
+                            setTimeout(() => {
+                                candlesPage.style.display = "none";
+                                quotePage.style.display = "block";
+                            }, 1000); // 1 second delay after all candles are blown out
+                        }
+
+                        requestAnimationFrame(detectSound);
+                    }
+
+                    detectSound();
+                })
+                .catch(err => console.error("Error accessing microphone: " + err));
+        }
+    </script>
+
+</body>
+</html>
